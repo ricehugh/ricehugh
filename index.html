@@ -171,13 +171,20 @@
         window.addEventListener("resize", onResize);
         requestAnimationFrame(render);
 
-        window.onload = function timep() {
+       <!-- window.onload = function timep() {
              // 请在这里按照格式修改前两个内容
             timeDifference(`2022/3/19 23:50:00`, `在一起`, h1);
             ptimer = setTimeout(timep, 1000); // 添加计时器
             timeDifference(`2019/3/19 10:00:00`, `第一次见面`, h1);
             ptimer = setTimeout(timep, 1000); // 添加计时器
-        }
+        } -->
+        $(document).ready(function () {
+            timeDifference(`2022/3/19 23:50:00`, `在一起`, h1);
+            ptimer = setTimeout(timep, 1000); // 添加计时器
+            timeDifference(`2019/3/19 10:00:00`, `第一次见面`, h1);
+            ptimer = setTimeout(timep, 1000); // 添加计时器
+        }); // jQuery 
+
 
 
 
