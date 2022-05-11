@@ -1,26 +1,229 @@
-<p>Hello 大家好</p>
-<p>我是RiceHugh，这是我的个人网站。 </p>
-<p>很高兴你来到这里, 你可以在以下的网站找到我</p>
+<!DOCTYPE html>
+<html>
 
-<ul>
-  <li> <a href="https://www.zhihu.com/people/AJLoveChina">知乎</a> </li>
-  <li> <a href="http://hejie.nigeerhuo.com">我的博客(已经不更细了,现在在知乎写文章)</a> </li>
-</ul>
-<script language="JavaScript">
- 
-<!-- Begin
-var today = new Date();
-var now = today.getDate();
-var year = today.getYear();
-if (year < 2000) year += 1900; // Y2K fix
-var month = today.getMonth();
- 
-var monarr = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
- 
-// check for leap year
-if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) monarr[1] = "29";
- 
-// display day left
-document.write("这个月还剩 " + (monarr[month]-now) + " 天了");
-//  End -->
-</script>
+<head>
+    <meta charset="utf-8">
+    <title>遇</title>
+    <!-- 这是网页标题 -->
+    <style>
+        body {
+            overflow: hidden;
+            margin: 0;
+            background: url(https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F11695386033%2F0.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1643859661&t=56c2c6c10490dd71ced649cc1dc90ac0);
+            background-size: 100% 100%;
+        }
+
+        h1 {
+            position: fixed;
+            top: 30%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            transform: translateY(-50%);
+            font-family: 'Love Ya Like A Sister', cursive;
+            font-size: 60px;
+            color: #000000;
+            padding: 0 20px;
+        }
+
+        h1 span {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 40px;
+        }
+
+        h2 {
+            position: fixed;
+            top: 30%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            transform: translateY(-50%);
+            font-family: 'Love Ya Like A Sister', cursive;
+            font-size: 60px;
+            padding: 0 20px;
+            color: #ff0000;
+        }
+    </style>
+
+</head>
+
+<body>
+<!-- 请在177行修改目标时间,以及目标时间名字 -->
+<!-- 200行修改过去时间想说的话 -->
+<!-- 205行修改未来时间想说的话 -->
+    <h1 id="h1"></h1>
+    <canvas></canvas>
+    <!--canvas 画布-->
+
+    <script>
+        var canvas = document.querySelector("canvas"),
+            ctx = canvas.getContext("2d");
+
+        var ww, wh;
+
+        function onResize() {
+            ww = canvas.width = window.innerWidth;
+            wh = canvas.height = window.innerHeight;
+        };
+
+        function col() {
+            var h = parseInt(Math.random() * 100 + 150);
+            var s = parseInt(Math.random() * 5 + 80);
+            var l = parseInt(Math.random() * 5 + 80);
+            var a = (Math.random() * 0.2 + 0.7).toFixed(2);
+            return `hsla(` + h + `,` + s + `%,` + l + `%,` + a + `)`;
+        };
+        var c = col;
+        ctx.strokeStyle = "red";
+        ctx.shadowBlur = 25;
+        ctx.shadowColor = c;
+
+        var precision = 100;
+        var hearts = [];
+        var mouseMoved = false;
+
+        function onMove(e) {
+            mouseMoved = true;
+            if (e.type === "touchmove") {
+                hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+                hearts.push(new Heart(e.touches[0].clientX, e.touches[0].clientY));
+            } else {
+                hearts.push(new Heart(e.clientX, e.clientY));
+                hearts.push(new Heart(e.clientX, e.clientY));
+            }
+        }
+
+        var Heart = function (x, y) {
+            this.x = x || Math.random() * ww;
+            this.y = y || Math.random() * wh;
+            this.size = Math.random() * 2 + 1;
+            this.shadowBlur = Math.random() * 10;
+            this.speedX = (Math.random() + 0.2 - 0.6) * 8;
+            this.speedY = (Math.random() + 0.2 - 0.6) * 8;
+            this.speedSize = Math.random() * 0.05 + 0.01;
+            this.opacity = 1;
+            this.vertices = [];
+            for (var i = 0; i < precision; i++) {
+                var step = (i / precision - 0.5) * (Math.PI * 2);
+                var vector = {
+                    x: (15 * Math.pow(Math.sin(step), 3)),
+                    y: -(13 * Math.cos(step) - 5 * Math.cos(2 * step) - 2 * Math.cos(3 * step) - Math.cos(4 * step))
+                }
+                this.vertices.push(vector);
+            }
+        }
+
+        Heart.prototype.draw = function () {
+            this.size -= this.speedSize;
+            this.x += this.speedX;
+            this.y += this.speedY;
+            ctx.save();
+            ctx.translate(-1000, this.y);
+            ctx.scale(this.size, this.size);
+            ctx.beginPath();
+            for (var i = 0; i < precision; i++) {
+                var vector = this.vertices[i];
+                ctx.lineTo(vector.x, vector.y);
+
+            }
+            ctx.globalAlpha = this.size;
+            ctx.shadowBlur = Math.round((3 - this.size) * 10);
+
+            function col() {
+                var h = parseInt(Math.random() * 100 + 150);
+                var s = parseInt(Math.random() * 5 + 80);
+                var l = parseInt(Math.random() * 5 + 80);
+                var a = (Math.random() * 0.2 + 0.7).toFixed(2);
+                return `hsla(${h},${s}%,${l}%,${a})`;
+            };
+            var c = col();
+            ctx.shadowColor = `${c}`;
+            ctx.shadowOffsetX = this.x + 1000;
+            ctx.globalCompositeOperation = "screen";
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        };
+
+
+        function render(a) {
+            requestAnimationFrame(render);
+
+            hearts.push(new Heart())
+            ctx.clearRect(0, 0, ww, wh);
+            for (var i = 0; i < hearts.length; i++) {
+                hearts[i].draw();
+                if (hearts[i].size <= 0) {
+                    hearts.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+
+        onResize();
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("touchmove", onMove);
+        window.addEventListener("resize", onResize);
+        requestAnimationFrame(render);
+
+        window.onload = function timep() {
+             // 请在这里按照格式修改前两个内容
+            timeDifference(`2022/1/9 16:52:00`, `纪念日`, h1);
+            ptimer = setTimeout(timep, 1000); // 添加计时器
+        }
+
+
+        //@function 计算当前时间到目标时间所差天数,小时,分钟,秒数
+//@param  endT为目标时间,需按照字符串格式输入,endName为目标时间的名字;默认为`目标时间`
+//@return  根据目标时间在当前时间的前后分别返回`距离XXX已过去XX天XX小时XX分XX秒`或`距离XXXX还有:XX天XX小时XX分XX秒`
+function timeDifference(endT, endName = `目标时间`, obj) {
+    var startTime = new Date().getTime();//引入当前时间戳
+    var endTime = new Date(endT).getTime();//引入结束目标时间戳
+    var secondDif = parseInt((endTime - startTime) / 1000);//计算真实时间差,单位s/秒
+    if (secondDif < 0) {
+        var secondDifference = -secondDif;
+    } else {
+        var secondDifference = secondDif;
+    }//定义时间差为正
+    var day = parseInt(secondDifference / 24 / 60 / 60);//计算出天数取整
+    var hour = parseInt(secondDifference / 60 / 60) % 24;//计算出总小时数去掉达到一天24h的部分
+    var minute = parseInt(secondDifference / 60) % 60;//计算出总分钟数去掉达到一小时60分钟的部分
+    var second = secondDifference % 60;//总秒数去掉达到一分钟60秒的部分
+    if (secondDif < 0) {//根据真实时间差选择输出语句
+        obj.innerHTML = `距离${endName}已过去:<br>${day < 10 ? '0' + day : day} 天 ${hour < 10 ? '0' + hour : hour} 小时 ${minute < 10 ? '0' + minute : minute} 分钟 ${second < 10 ? '0' + second : second} 秒<br>
+        <span> 无论是过去,还是未来,我都将奉陪到底。<br>Whether it is the past or the future, <br>I will accompany you to the end.`
+        //此处修改过去时输出的内容
+        return false;
+    } else {
+        obj.innerHTML = `距离${endName}还有:<br>${day < 10 ? '0' + day : day} 天 ${hour < 10 ? '0' + hour : hour} 小时 ${minute < 10 ? '0' + minute : minute} 分钟 ${second < 10 ? '0' + second : second} 秒<br>
+        <span>你的过去我来不及参与，你的未来我奉陪到底。<br>I am too late to participate in your past,<br> and I will accompany you to the end of your future.`
+        //此处修改未来时输出的内容
+            return true;
+    }
+
+}
+
+    </script>
+    <audio id="bgmusic" src="http://music.163.com/song/media/outer/url?id=1851244378.mp3" autoplay="autoplay"
+        loop="loop" style="display: block; width: 3%; height:3%;"></audio>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            function audioAutoPlay() {
+                var audio = document.getElementById('bgmusic');
+                audio.play();
+                document.addEventListener("WeixinJSBridgeReady", function () {
+                    audio.play();
+                }, false);
+            }
+            audioAutoPlay();
+        });
+    </script>
+
+</body>
+
+</html>
